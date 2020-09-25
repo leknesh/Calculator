@@ -5,15 +5,16 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.main.MainFragment"
+    tools:context=".View.MainFragment"
     android:padding="24dp"
     android:background="@color/backgroundColor">
 
     <TextView
-        android:id="@+id/input_history_til"
+        android:id="@+id/input_history_tv"
         android:layout_height="wrap_content"
         android:layout_width="match_parent"
         android:layout_marginTop="36dp"
+        android:textAlignment="viewEnd"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toEndOf="@id/reset_btn"
         app:layout_constraintBottom_toTopOf="@id/reset_btn"
@@ -29,20 +30,21 @@
         android:backgroundTint="@color/textBackgroundColor"
         android:checkable="true"
         android:text="AC"
-        android:textAppearance="@style/TextAppearance.AppCompat.Display2"
-        app:layout_constraintStart_toStartOf="@id/input_history_til"
-        app:layout_constraintTop_toBottomOf="@id/input_history_til"
-        app:layout_constraintBottom_toTopOf="@id/no9_btn"/>
+        android:textAppearance="@style/TextAppearance.AppCompat.Display1"
+        app:layout_constraintStart_toStartOf="@id/input_history_tv"
+        app:layout_constraintTop_toBottomOf="@id/input_history_tv"
+        app:layout_constraintBottom_toTopOf="@id/nine_btn"/>
 
     <TextView
-        android:id="@+id/input_til"
+        android:id="@+id/result_tv"
         android:layout_height="wrap_content"
         android:layout_width="0dp"
         android:layout_marginHorizontal="4dp"
-        android:paddingVertical="4dp"
+        android:padding="4dp"
+        android:textAlignment="viewEnd"
         android:background="@color/textBackgroundColor"
         android:inputType="none"
-        android:textAppearance="@style/TextAppearance.AppCompat.Display2"
+        android:textAppearance="@style/TextAppearance.AppCompat.Display1"
         app:layout_constraintStart_toEndOf="@id/reset_btn"
         app:layout_constraintEnd_toStartOf="@id/back_btn"
         app:layout_constraintTop_toTopOf="@id/reset_btn"
@@ -55,55 +57,51 @@
         android:layout_height="wrap_content"
         android:backgroundTint="@color/textBackgroundColor"
         android:checkable="true"
-        android:padding="10dp"
         app:icon="@drawable/ic_outline_backspace_24"
-        app:iconGravity="end"
-        app:iconPadding="16dp"
-        app:iconSize="52dp"
-        app:iconTint="@color/colorPrimaryDark"
-        app:iconTintMode="add"
-        android:text=""
-        android:textAppearance="@style/TextAppearance.AppCompat.Display2"
-        app:layout_constraintEnd_toEndOf="@id/input_history_til"
+        app:iconGravity="start"
+        app:iconSize="32dp"
+        android:text=" "
+        android:textAppearance="@style/TextAppearance.AppCompat.Display1"
+        app:layout_constraintEnd_toEndOf="@id/input_history_tv"
         app:layout_constraintTop_toTopOf="@id/reset_btn"/>
 
     <com.google.android.material.button.MaterialButton
-        android:id="@+id/no7_btn"
+        android:id="@+id/seven_btn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:backgroundTint="@color/textBackgroundColor"
         android:checkable="true"
         android:text="7"
-        android:textAppearance="@style/TextAppearance.AppCompat.Display2"
+        android:textAppearance="@style/TextAppearance.AppCompat.Display1"
         app:layout_constraintStart_toStartOf="@id/reset_btn"
         app:layout_constraintTop_toBottomOf="@id/reset_btn"
-        app:layout_constraintBottom_toTopOf="@id/no4_btn"/>
+        app:layout_constraintBottom_toTopOf="@id/four_btn"/>
 
     <com.google.android.material.button.MaterialButton
-        android:id="@+id/no8_btn"
+        android:id="@+id/eight_btn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:backgroundTint="@color/textBackgroundColor"
         android:checkable="true"
         android:text="8"
-        android:textAppearance="@style/TextAppearance.AppCompat.Display2"
-        app:layout_constraintStart_toEndOf="@id/no7_btn"
-        app:layout_constraintEnd_toStartOf="@id/no9_btn"
+        android:textAppearance="@style/TextAppearance.AppCompat.Display1"
+        app:layout_constraintStart_toEndOf="@id/seven_btn"
+        app:layout_constraintEnd_toStartOf="@id/nine_btn"
         app:layout_constraintTop_toBottomOf="@id/reset_btn"
-        app:layout_constraintBottom_toTopOf="@id/no5_btn"/>
+        app:layout_constraintBottom_toTopOf="@id/five_btn"/>
 
     <com.google.android.material.button.MaterialButton
-        android:id="@+id/no9_btn"
+        android:id="@+id/nine_btn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:backgroundTint="@color/textBackgroundColor"
         android:checkable="true"
         android:text="9"
-        android:textAppearance="@style/TextAppearance.AppCompat.Display2"
-        app:layout_constraintStart_toEndOf="@id/no8_btn"
+        android:textAppearance="@style/TextAppearance.AppCompat.Display1"
+        app:layout_constraintStart_toEndOf="@id/eight_btn"
         app:layout_constraintEnd_toStartOf="@id/divide_btn"
         app:layout_constraintTop_toBottomOf="@id/reset_btn"
-        app:layout_constraintBottom_toTopOf="@id/no6_btn"/>
+        app:layout_constraintBottom_toTopOf="@id/six_btn"/>
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/divide_btn"
@@ -111,49 +109,49 @@
         android:layout_height="wrap_content"
         android:backgroundTint="@color/textBackgroundColor"
         android:checkable="true"
-        android:text="/"
-        android:textAppearance="@style/TextAppearance.AppCompat.Display2"
-        app:layout_constraintEnd_toEndOf="@id/input_history_til"
+        android:text="\/"
+        android:textAppearance="@style/TextAppearance.AppCompat.Display1"
+        app:layout_constraintEnd_toEndOf="@id/input_history_tv"
         app:layout_constraintBottom_toTopOf="@id/multiply_btn"
         app:layout_constraintTop_toBottomOf="@id/reset_btn"/>
 
     <com.google.android.material.button.MaterialButton
-        android:id="@+id/no4_btn"
+        android:id="@+id/four_btn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:backgroundTint="@color/textBackgroundColor"
         android:checkable="true"
         android:text="4"
-        android:textAppearance="@style/TextAppearance.AppCompat.Display2"
+        android:textAppearance="@style/TextAppearance.AppCompat.Display1"
         app:layout_constraintStart_toStartOf="@id/reset_btn"
-        app:layout_constraintTop_toBottomOf="@id/no7_btn"
-        app:layout_constraintBottom_toTopOf="@id/no1_btn"/>
+        app:layout_constraintTop_toBottomOf="@id/seven_btn"
+        app:layout_constraintBottom_toTopOf="@id/one_btn"/>
 
     <com.google.android.material.button.MaterialButton
-        android:id="@+id/no5_btn"
+        android:id="@+id/five_btn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:backgroundTint="@color/textBackgroundColor"
         android:checkable="true"
         android:text="5"
-        android:textAppearance="@style/TextAppearance.AppCompat.Display2"
-        app:layout_constraintStart_toEndOf="@id/no4_btn"
-        app:layout_constraintEnd_toStartOf="@id/no6_btn"
-        app:layout_constraintTop_toBottomOf="@id/no8_btn"
-        app:layout_constraintBottom_toTopOf="@id/no2_btn"/>
+        android:textAppearance="@style/TextAppearance.AppCompat.Display1"
+        app:layout_constraintStart_toEndOf="@id/four_btn"
+        app:layout_constraintEnd_toStartOf="@id/six_btn"
+        app:layout_constraintTop_toBottomOf="@id/eight_btn"
+        app:layout_constraintBottom_toTopOf="@id/two_btn"/>
 
     <com.google.android.material.button.MaterialButton
-        android:id="@+id/no6_btn"
+        android:id="@+id/six_btn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:backgroundTint="@color/textBackgroundColor"
         android:checkable="true"
         android:text="6"
-        android:textAppearance="@style/TextAppearance.AppCompat.Display2"
-        app:layout_constraintStart_toEndOf="@id/no5_btn"
+        android:textAppearance="@style/TextAppearance.AppCompat.Display1"
+        app:layout_constraintStart_toEndOf="@id/five_btn"
         app:layout_constraintEnd_toStartOf="@id/minus_btn"
-        app:layout_constraintTop_toBottomOf="@id/no9_btn"
-        app:layout_constraintBottom_toTopOf="@id/no3_btn"/>
+        app:layout_constraintTop_toBottomOf="@id/nine_btn"
+        app:layout_constraintBottom_toTopOf="@id/three_btn"/>
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/multiply_btn"
@@ -161,49 +159,49 @@
         android:layout_height="wrap_content"
         android:backgroundTint="@color/textBackgroundColor"
         android:checkable="true"
-        android:text="*"
-        android:textAppearance="@style/TextAppearance.AppCompat.Display2"
+        android:text="\*"
+        android:textAppearance="@style/TextAppearance.AppCompat.Display1"
         app:layout_constraintEnd_toEndOf="@id/back_btn"
         app:layout_constraintTop_toBottomOf="@id/divide_btn"
         app:layout_constraintBottom_toTopOf="@id/minus_btn"/>
 
     <com.google.android.material.button.MaterialButton
-        android:id="@+id/no1_btn"
+        android:id="@+id/one_btn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:backgroundTint="@color/textBackgroundColor"
         android:checkable="true"
         android:text="1"
-        android:textAppearance="@style/TextAppearance.AppCompat.Display2"
+        android:textAppearance="@style/TextAppearance.AppCompat.Display1"
         app:layout_constraintStart_toStartOf="@id/reset_btn"
-        app:layout_constraintTop_toBottomOf="@id/no4_btn"
-        app:layout_constraintBottom_toTopOf="@id/no0_btn"/>
+        app:layout_constraintTop_toBottomOf="@id/four_btn"
+        app:layout_constraintBottom_toTopOf="@id/zero_btn"/>
 
     <com.google.android.material.button.MaterialButton
-        android:id="@+id/no2_btn"
+        android:id="@+id/two_btn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:backgroundTint="@color/textBackgroundColor"
         android:checkable="true"
         android:text="2"
-        android:textAppearance="@style/TextAppearance.AppCompat.Display2"
-        app:layout_constraintStart_toEndOf="@id/no1_btn"
-        app:layout_constraintEnd_toStartOf="@id/no3_btn"
-        app:layout_constraintTop_toBottomOf="@id/no5_btn"
+        android:textAppearance="@style/TextAppearance.AppCompat.Display1"
+        app:layout_constraintStart_toEndOf="@id/one_btn"
+        app:layout_constraintEnd_toStartOf="@id/three_btn"
+        app:layout_constraintTop_toBottomOf="@id/five_btn"
         app:layout_constraintBottom_toTopOf="@id/comma_btn"
 />
 
     <com.google.android.material.button.MaterialButton
-        android:id="@+id/no3_btn"
+        android:id="@+id/three_btn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:backgroundTint="@color/textBackgroundColor"
         android:checkable="true"
         android:text="3"
-        android:textAppearance="@style/TextAppearance.AppCompat.Display2"
-        app:layout_constraintStart_toEndOf="@id/no2_btn"
+        android:textAppearance="@style/TextAppearance.AppCompat.Display1"
+        app:layout_constraintStart_toEndOf="@id/two_btn"
         app:layout_constraintEnd_toStartOf="@id/divide_btn"
-        app:layout_constraintTop_toBottomOf="@id/no6_btn"
+        app:layout_constraintTop_toBottomOf="@id/six_btn"
         app:layout_constraintBottom_toTopOf="@id/plus_btn"/>
 
     <com.google.android.material.button.MaterialButton
@@ -212,22 +210,22 @@
         android:layout_height="wrap_content"
         android:backgroundTint="@color/textBackgroundColor"
         android:checkable="true"
-        android:text="-"
-        android:textAppearance="@style/TextAppearance.AppCompat.Display2"
+        android:text="\-"
+        android:textAppearance="@style/TextAppearance.AppCompat.Display1"
         app:layout_constraintEnd_toEndOf="@id/back_btn"
         app:layout_constraintTop_toBottomOf="@id/multiply_btn"
         app:layout_constraintBottom_toTopOf="@id/equals_btn"/>
 
     <com.google.android.material.button.MaterialButton
-        android:id="@+id/no0_btn"
+        android:id="@+id/zero_btn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:backgroundTint="@color/textBackgroundColor"
         android:checkable="true"
         android:text="0"
-        android:textAppearance="@style/TextAppearance.AppCompat.Display2"
-        app:layout_constraintStart_toStartOf="@id/no1_btn"
-        app:layout_constraintTop_toBottomOf="@id/no1_btn"
+        android:textAppearance="@style/TextAppearance.AppCompat.Display1"
+        app:layout_constraintStart_toStartOf="@id/one_btn"
+        app:layout_constraintTop_toBottomOf="@id/one_btn"
         app:layout_constraintBottom_toBottomOf="parent"/>
 
     <com.google.android.material.button.MaterialButton
@@ -237,10 +235,10 @@
         android:backgroundTint="@color/textBackgroundColor"
         android:checkable="true"
         android:text="."
-        android:textAppearance="@style/TextAppearance.AppCompat.Display2"
-        app:layout_constraintStart_toEndOf="@id/no0_btn"
+        android:textAppearance="@style/TextAppearance.AppCompat.Display1"
+        app:layout_constraintStart_toEndOf="@id/zero_btn"
         app:layout_constraintEnd_toStartOf="@id/plus_btn"
-        app:layout_constraintTop_toBottomOf="@id/no2_btn"
+        app:layout_constraintTop_toBottomOf="@id/two_btn"
         app:layout_constraintBottom_toBottomOf="parent" />
 
     <com.google.android.material.button.MaterialButton
@@ -249,11 +247,11 @@
         android:layout_height="wrap_content"
         android:backgroundTint="@color/textBackgroundColor"
         android:checkable="true"
-        android:text="+"
-        android:textAppearance="@style/TextAppearance.AppCompat.Display2"
+        android:text="\+"
+        android:textAppearance="@style/TextAppearance.AppCompat.Display1"
         app:layout_constraintStart_toEndOf="@id/comma_btn"
         app:layout_constraintEnd_toStartOf="@id/equals_btn"
-        app:layout_constraintTop_toBottomOf="@id/no3_btn"
+        app:layout_constraintTop_toBottomOf="@id/three_btn"
         app:layout_constraintBottom_toBottomOf="parent"/>
 
     <com.google.android.material.button.MaterialButton
@@ -262,8 +260,8 @@
         android:layout_height="wrap_content"
         android:backgroundTint="@color/textBackgroundColor"
         android:checkable="true"
-        android:text="="
-        android:textAppearance="@style/TextAppearance.AppCompat.Display2"
+        android:text ="\="
+        android:textAppearance="@style/TextAppearance.AppCompat.Display1"
         app:layout_constraintEnd_toEndOf="@id/back_btn"
         app:layout_constraintTop_toBottomOf="@id/minus_btn"
         app:layout_constraintBottom_toBottomOf="parent" />
