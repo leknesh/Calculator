@@ -69,26 +69,31 @@ public class ResultService {
                                 subResult = thisNumber / nextNumber;
                             Log.d("TAG", "New subres = " + subResult + ", operation = " + thisOperator);
                             break;
-                        case "+":
-                            subResult = thisNumber + nextNumber;
-                            Log.d("TAG", "New subres = " + subResult + ", operation = " + thisOperator);
-                            break;
                         case "-":
                             subResult = thisNumber - nextNumber;
+                            Log.d("TAG", "New subres = " + subResult + ", operation = " + thisOperator);
+                            break;
+                        case "+":
+                            subResult = thisNumber + nextNumber;
                             Log.d("TAG", "New subres = " + subResult + ", operation = " + thisOperator);
                             break;
                         default:
                             //when nothing matches current operator: moving to next
                             break;
                     }
-                    subOperations.set(1, new SubOperation(String.valueOf(subResult), nextOperator));
+                    subOperations.set(i + 1, new SubOperation(String.valueOf(subResult), nextOperator));
                     subOperations.remove(thisOperation);
+                    i++;
                     Log.d("TAG", "New subres = " + subResult + ", newlistsize = " + subOperations.size());
                     Log.d("TAG", "nextOperation = " + new SubOperation(String.valueOf(subResult), nextOperator).toString());
-                } else {
-                    operators = operators.substring(1);
+                    calculateResult(operators, subOperations);
                 }
+            }
+            if (operators.length()>1){
+                operators = operators.substring(1);
                 calculateResult(operators, subOperations);
+            } else {
+                return subOperations;
             }
         }
         return subOperations;

@@ -1,9 +1,9 @@
 package com.hle.calculator.View;
 
 import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 
+import android.content.Context;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -22,10 +22,14 @@ import com.hle.calculator.Model.SubOperation;
 import com.hle.calculator.R;
 import com.hle.calculator.ViewModel.MainViewModel;
 
+import org.json.JSONException;
+
 import java.util.ArrayList;
 
 public class MainFragment extends Fragment implements MaterialButton.OnCheckedChangeListener {
 
+    private static final String HISTORY_STRING = "INPUT_STRING";
+    private static final String RESULT_STRING = "RESULT_STRING";
     private MainViewModel mViewModel;
 
     private View rootView;
@@ -35,6 +39,8 @@ public class MainFragment extends Fragment implements MaterialButton.OnCheckedCh
 
     private ResultService resultService;
     private String tempString = "";
+    private String historyString = "";
+    private String resultString = "0.0";
     private Boolean zeroError = true;
     private final String TAG = "TAG";
 
@@ -53,29 +59,33 @@ public class MainFragment extends Fragment implements MaterialButton.OnCheckedCh
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        mViewModel = new ViewModelProvider(MainFragment.this).get(MainViewModel.class);
-        resultService = new ResultService();
-        mViewModel.setResultService(resultService);
 
         buildGui();
-        setDataObservers();
+        addListeners();
+        mViewModel = new ViewModelProvider(requireActivity()).get(MainViewModel.class);
+        //due to mediators the viewmodel cannot be recreated
+        if (savedInstanceState != null){
+            historyString = savedInstanceState.getString(HISTORY_STRING);
+            resultString = savedInstanceState.getString(RESULT_STRING);
+        } else {
+            setDataObservers();
+        }
     }
 
     //observers will ensure updated text in textviews
     private void setDataObservers() {
         //initialisation needed for mediators to start observing
-        mViewModel.getLiveSubOperationList().observe(getViewLifecycleOwner(), new Observer<ArrayList<SubOperation>>() {
+        mViewModel.getLiveSubOperationList().observe(requireActivity(), new Observer<ArrayList<SubOperation>>() {
             @Override
             public void onChanged(ArrayList<SubOperation> subOperations) {
                 if (subOperations == null){
                     resultTextView.setText("0.0");
                 } else if (subOperations.size() > 0){
-                    Log.d(TAG, "subop list size: " + subOperations.size());
                     String string = subOperations.get(subOperations.size()-1).getOperator();
                     if (string.equals("=")){
-                        String result = mViewModel.calculateResult(subOperations);
-                        resultTextView.setText(result);
-                        mViewModel.setHistoryInput(result);
+                        resultString = mViewModel.calculateResult(subOperations);
+                        resultTextView.setText(resultString);
+                        mViewModel.setHistoryInput(resultString);
                         mViewModel.setHistoryInput("Q");
                         mViewModel.setLiveNumberString(null);
                         mViewModel.setLiveSubOperation(null);
@@ -85,10 +95,11 @@ public class MainFragment extends Fragment implements MaterialButton.OnCheckedCh
             }
         });
 
-        mViewModel.getLiveHistoryString().observe(getViewLifecycleOwner(), new Observer<String>() {
+        mViewModel.getLiveHistoryString().observe(requireActivity(), new Observer<String>() {
             @Override
             public void onChanged(String string) {
                 if (string != null){
+                    historyString = string;
                     historyTextView.setText(string);
                 } else {
                     historyTextView.setText("");
@@ -96,36 +107,48 @@ public class MainFragment extends Fragment implements MaterialButton.OnCheckedCh
             }
         });
 
-        mViewModel.getZeroError().observe(getViewLifecycleOwner(), new Observer<Boolean>() {
+        mViewModel.getZeroError().observe(requireActivity(), new Observer<Boolean>() {
             @Override
             public void onChanged(Boolean aBoolean) {
                 if (aBoolean){
                     resultTextView.setText(R.string.div_error);
+                } else {
+                    resultTextView.setText("");
                 }
-                mViewModel.setZeroError(false);
+
             }
         });
 
-        mViewModel.getLiveSubOperation().observe(getViewLifecycleOwner(), new Observer<SubOperation>() {
+        mViewModel.getLiveSubOperation().observe(requireActivity(), new Observer<SubOperation>() {
             @Override
             public void onChanged(SubOperation subOperation) {
                 //do nothing
             }
         });
 
-        mViewModel.getLiveNumberString().observe(getViewLifecycleOwner(), new Observer<String>() {
+        mViewModel.getLiveNumberString().observe(requireActivity(), new Observer<String>() {
             @Override
             public void onChanged(String s) {
                 //do nothing
             }
         });
     }
+    /*called onstop to avoid mediator multiple observer crash
+    private void removeObservers() {
+        mViewModel.getLiveSubOperationList().removeObservers(getViewLifecycleOwner());
+        mViewModel.getLiveHistoryString().removeObservers(getViewLifecycleOwner());
+        mViewModel.getZeroError().removeObservers(getViewLifecycleOwner());
+        mViewModel.getLiveSubOperation().removeObservers(getViewLifecycleOwner());
+        mViewModel.getLiveNumberString().removeObservers(getViewLifecycleOwner());
+    }*/
+
 
 
     private void buildGui() {
         historyTextView = rootView.findViewById(R.id.input_history_tv);
+        historyTextView.setText(historyString);
         resultTextView = rootView.findViewById(R.id.result_tv);
-        resultTextView.setText("0.0");
+        resultTextView.setText(resultString);
         resetBtn = rootView.findViewById(R.id.reset_btn);
         backBtn = rootView.findViewById(R.id.back_btn);
         plusBtn = rootView.findViewById(R.id.plus_btn);
@@ -144,8 +167,6 @@ public class MainFragment extends Fragment implements MaterialButton.OnCheckedCh
         sevenBtn = rootView.findViewById(R.id.seven_btn);
         eightBtn = rootView.findViewById(R.id.eight_btn);
         nineBtn = rootView.findViewById(R.id.nine_btn);
-        
-        addListeners();
     }
 
     private void addListeners() {
@@ -174,12 +195,83 @@ public class MainFragment extends Fragment implements MaterialButton.OnCheckedCh
         //Materialbutton, check/uncheck state not used, toggle check status after event
         if (isChecked){
             String buttonTxt = String.valueOf(button.getText());
-            if (!buttonTxt.isEmpty()){
+            Log.d("TAG", "Button clicked: " + buttonTxt);
+            if (mViewModel != null && !buttonTxt.isEmpty()){
                 //two copies needed for different mediators
-                mViewModel.setHistoryInput(buttonTxt);
-                mViewModel.setButtonInput(buttonTxt);
+                if (mViewModel.getHistoryInput() != null){
+                    mViewModel.setHistoryInput(buttonTxt);
+                }
+                if (mViewModel.getButtonInput() != null){
+                    mViewModel.setButtonInput(buttonTxt);
+                }
             }
             button.setChecked(false);
         }
+    }
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        Log.d("KayaCamp", "mapfrag onstart" );
+        //supportMapFragment.onStart();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        //supportMapFragment.onResume();
+        Log.d("KayaCamp", "mapfrag onresume" );
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        //supportMapFragment.onPause();
+        Log.d("KayaCamp", "mapfrag onpause" );
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        //removeObservers();
+        Log.d("KayaCamp", "mapfrag onstop" );
+    }
+
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        //supportMapFragment.onSaveInstanceState(outState);
+        Log.d("KayaCamp", "mapfrag onsaveinstancestate" );
+        outState.putString(HISTORY_STRING, historyString);
+        outState.putString(RESULT_STRING, resultString);
+    }
+
+    @Override
+    public void onLowMemory() {
+        super.onLowMemory();
+        //supportMapFragment.onLowMemory();
+        Log.d("KayaCamp", "mapfrag onLowmemory" );
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        //supportMapFragment.onDestroy();
+        Log.d("KayaCamp", "mapfrag ondestroyview" );
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        Log.d("KayaCamp", "mapfrag ondestroy" );
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
     }
 }

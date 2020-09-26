@@ -6,6 +6,7 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MediatorLiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
+import androidx.lifecycle.SavedStateHandle;
 import androidx.lifecycle.ViewModel;
 
 import com.hle.calculator.Model.ResultService;
@@ -14,8 +15,13 @@ import com.hle.calculator.Model.SubOperation;
 import java.util.ArrayList;
 
 public class MainViewModel extends ViewModel {
-    private final String operators = "=*/+-";
+    private final String operators = "=*/-+";
     private ResultService resultService;
+    private SavedStateHandle mState;
+
+    private static final String HISTORY_KEY = "HISTORY";
+    private static final String OPERATIONS_KEY = "OPERATIONS";
+    private static final String NUMBER_KEY = "NUMBER";
 
     //separate data stream needed for the input history view due to mediator limitations
     private MutableLiveData<String> historyInput = new MutableLiveData<>();
@@ -34,7 +40,10 @@ public class MainViewModel extends ViewModel {
     private final String TAG = "TAG";
 
     //empty constructor required
-    public MainViewModel(){}
+    public MainViewModel(SavedStateHandle savedStateHandle){
+        mState = savedStateHandle;
+        setResultService(new ResultService());
+    }
 
     public void setResultService(ResultService service){
         this.resultService = service;
@@ -157,16 +166,22 @@ public class MainViewModel extends ViewModel {
             @Override
             public void onChanged(SubOperation subOperation) {
                 ArrayList<SubOperation> list = new ArrayList<>();
+
                 if (subOperation != null) {
                     if (liveSubOperationList.getValue() != null) {
                         list = liveSubOperationList.getValue();
                     } else {
                         list = new ArrayList<>();
                     }
-                    if (subOperation.getOperator().equals("/")){
-                        setZeroError(true);
+                    //checking if new operation is "legal"; not /0
+                    if (!subOperation.getNumberString().isEmpty() && resultService.isNumber(subOperation.getNumberString())){
+                        double number = Double.parseDouble(subOperation.getNumberString());
+                        if (list.size() > 0 && list.get(list.size() - 1).getOperator().equals("/") && number == 0) {
+                            setZeroError(true);
+                        } else {
+                            list.add(subOperation);
+                        }
                     }
-                    list.add(subOperation);
                 }
                 setLiveSubOperationList(list);
             }
@@ -251,6 +266,7 @@ public class MainViewModel extends ViewModel {
             if (tempString != null && !tempString.isEmpty()){
                 return tempString.substring(0, tempString.length()-1);
             }
+            setZeroError(false);
         }
         return  null;
     }
@@ -273,6 +289,7 @@ public class MainViewModel extends ViewModel {
     }
 
     public void resetAll() {
+        setZeroError(false);
         setLiveHistoryString("");
         setLiveSubOperation(null);
         setLiveSubOperationList(null);

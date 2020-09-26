@@ -1,4 +1,4 @@
 <resources>
     <string name="app_name">Calculator</string>
-    <string name="div_error">DIV ERROR</string>
+    <string name="div_error">DIV0</string>
 </resources>
