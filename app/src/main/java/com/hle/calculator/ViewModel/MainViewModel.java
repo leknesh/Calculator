@@ -6,7 +6,6 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MediatorLiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
-import androidx.lifecycle.SavedStateHandle;
 import androidx.lifecycle.ViewModel;
 
 import com.hle.calculator.Model.ResultService;
@@ -17,11 +16,6 @@ import java.util.ArrayList;
 public class MainViewModel extends ViewModel {
     private final String operators = "=*/-+";
     private ResultService resultService;
-    private SavedStateHandle mState;
-
-    private static final String HISTORY_KEY = "HISTORY";
-    private static final String OPERATIONS_KEY = "OPERATIONS";
-    private static final String NUMBER_KEY = "NUMBER";
 
     //separate data stream needed for the input history view due to mediator limitations
     private MutableLiveData<String> historyInput = new MutableLiveData<>();
@@ -40,10 +34,7 @@ public class MainViewModel extends ViewModel {
     private final String TAG = "TAG";
 
     //empty constructor required
-    public MainViewModel(SavedStateHandle savedStateHandle){
-        mState = savedStateHandle;
-        setResultService(new ResultService());
-    }
+    public MainViewModel(){}
 
     public void setResultService(ResultService service){
         this.resultService = service;
@@ -60,6 +51,7 @@ public class MainViewModel extends ViewModel {
         if (inputString == null){
             historyInput.setValue(null);
         }
+        Log.d(TAG, "VM sethistoryinput" + inputString);
         historyInput.setValue(inputString);
     }
 
@@ -108,6 +100,7 @@ public class MainViewModel extends ViewModel {
         liveHistoryString.addSource(historyInput, new Observer<String>() {
             @Override
             public void onChanged(String input) {
+                Log.d(TAG, "historyInput onchanged, new = " + input);
                 if (input != null) {
                     String string = "";
                     if (liveHistoryString.getValue() != null) {
@@ -296,5 +289,11 @@ public class MainViewModel extends ViewModel {
         setHistoryInput("");
         setLiveNumberString("");
         setLiveResult("0.0");
+    }
+
+    @Override
+    protected void onCleared() {
+        super.onCleared();
+        Log.d(TAG, "VIEWMODEL CLEARED!");
     }
 }

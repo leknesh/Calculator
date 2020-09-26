@@ -11,19 +11,19 @@
 
     <TextView
         android:id="@+id/input_history_tv"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
         android:layout_width="0dp"
         android:layout_margin="4dp"
         android:textAlignment="viewEnd"
         android:textColor="@color/primaryTextColor"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/seven_btn"
-        app:layout_constraintBottom_toTopOf="@id/reset_btn"
         android:background="@color/textBackgroundColor"
         android:textAppearance="@style/TextAppearance.AppCompat.Display1"
-        android:lines="5"
-        android:inputType="none"/>
+        android:minLines="4"
+        android:inputType="none"
+        app:layout_constraintTop_toTopOf="@id/seven_btn"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/seven_btn"
+        app:layout_constraintBottom_toBottomOf="@id/one_btn"/>
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/reset_btn"
@@ -35,8 +35,8 @@
         android:text="AC"
         android:textAppearance="@style/TextAppearance.AppCompat.Display1"
         app:layout_constraintStart_toStartOf="@id/input_history_tv"
-        app:layout_constraintTop_toBottomOf="@id/input_history_tv"
-        app:layout_constraintBottom_toBottomOf="parent"/>
+        app:layout_constraintBottom_toBottomOf="@id/result_tv"
+        app:layout_constraintTop_toTopOf="@id/result_tv"/>
 
     <TextView
         android:id="@+id/result_tv"
@@ -51,8 +51,8 @@
         android:textAppearance="@style/TextAppearance.AppCompat.Display1"
         app:layout_constraintStart_toEndOf="@id/reset_btn"
         app:layout_constraintEnd_toStartOf="@id/back_btn"
-        app:layout_constraintTop_toTopOf="@id/reset_btn"
-        app:layout_constraintBottom_toBottomOf="@id/reset_btn"/>
+        app:layout_constraintTop_toTopOf="@id/back_btn"
+        app:layout_constraintBottom_toBottomOf="@id/back_btn"/>
 
 
     <com.google.android.material.button.MaterialButton
@@ -65,11 +65,12 @@
         android:textAppearance="@style/TextAppearance.AppCompat.Display1"
         android:textColor="@color/primaryTextColor"
         app:icon="@drawable/ic_outline_backspace_24"
-        app:iconGravity="start"
+        app:iconGravity="end"
         app:iconSize="32dp"
         app:iconTint="#787676"
         app:layout_constraintEnd_toEndOf="@id/input_history_tv"
-        app:layout_constraintTop_toTopOf="@id/reset_btn" />
+        app:layout_constraintTop_toTopOf="@id/zero_btn"
+        app:layout_constraintBottom_toBottomOf="@id/zero_btn"/>
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/seven_btn"
