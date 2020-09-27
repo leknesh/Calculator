@@ -15,6 +15,7 @@
         android:layout_width="0dp"
         android:layout_margin="4dp"
         android:textAlignment="viewEnd"
+        android:scrollbars="vertical"
         android:textColor="@color/primaryTextColor"
         android:background="@color/textBackgroundColor"
         android:textAppearance="@style/TextAppearance.AppCompat.Display1"

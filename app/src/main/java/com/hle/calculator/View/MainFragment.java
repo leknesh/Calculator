@@ -9,7 +9,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
-import android.util.Log;
+import android.text.method.ScrollingMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,8 +20,6 @@ import com.hle.calculator.Model.ResultService;
 import com.hle.calculator.Model.SubOperation;
 import com.hle.calculator.R;
 import com.hle.calculator.ViewModel.MainViewModel;
-
-import org.json.JSONException;
 
 import java.util.ArrayList;
 
@@ -36,12 +34,8 @@ public class MainFragment extends Fragment implements MaterialButton.OnCheckedCh
     private MaterialButton resetBtn, backBtn, plusBtn, minusBtn, multiplyBtn, divideBtn, equalsBtn, commaBtn;
     private MaterialButton zeroBtn, oneBtn, twoBtn, threeBtn, fourBtn, fiveBtn, sixBtn, sevenBtn, eightBtn, nineBtn;
 
-    private ResultService resultService;
-    private String tempString = "";
     private String historyString = "";
     private String resultString = "0.0";
-    private Boolean zeroError = true;
-    private final String TAG = "TAG";
 
     @Nullable
     @Override
@@ -57,6 +51,7 @@ public class MainFragment extends Fragment implements MaterialButton.OnCheckedCh
         buildGui();
         addListeners();
 
+        //setting the data observers twice causes crash
         if (savedInstanceState == null) {
             mViewModel = new ViewModelProvider(MainFragment.this).get(MainViewModel.class);
             mViewModel.setResultService(new ResultService());
@@ -64,7 +59,6 @@ public class MainFragment extends Fragment implements MaterialButton.OnCheckedCh
         } else {
             historyString = savedInstanceState.getString(HISTORY_STRING);
             resultString = savedInstanceState.getString(RESULT_STRING);
-            Log.d(TAG, "oncreateview, histstring =" + historyString);
             historyTextView.setText(historyString);
             resultTextView.setText(resultString);
         }
@@ -72,7 +66,6 @@ public class MainFragment extends Fragment implements MaterialButton.OnCheckedCh
 
     //observers will ensure updated text in textviews
     private void setDataObservers() {
-        //initialisation needed for mediators to start observing
         mViewModel.getLiveSubOperationList().observe(getViewLifecycleOwner(), new Observer<ArrayList<SubOperation>>() {
             @Override
             public void onChanged(ArrayList<SubOperation> subOperations) {
@@ -84,6 +77,7 @@ public class MainFragment extends Fragment implements MaterialButton.OnCheckedCh
                         resultString = mViewModel.calculateResult(subOperations);
                         resultTextView.setText(resultString);
                         mViewModel.setHistoryInput(resultString);
+                        //not able to send a line shift in the livedata, Q is substitute, handled on concatenation
                         mViewModel.setHistoryInput("Q");
                         mViewModel.setLiveNumberString(null);
                         mViewModel.setLiveSubOperation(null);
@@ -96,7 +90,6 @@ public class MainFragment extends Fragment implements MaterialButton.OnCheckedCh
         mViewModel.getLiveHistoryString().observe(getViewLifecycleOwner(), new Observer<String>() {
             @Override
             public void onChanged(String string) {
-                Log.d(TAG, "fragment livehistory onchanged: " + string);
                 if (string != null){
                     historyTextView = rootView.findViewById(R.id.input_history_tv);
                     historyTextView.setText(string);
@@ -107,18 +100,21 @@ public class MainFragment extends Fragment implements MaterialButton.OnCheckedCh
             }
         });
 
-        mViewModel.getZeroError().observe(getViewLifecycleOwner(), new Observer<Boolean>() {
+        mViewModel.getLiveError().observe(getViewLifecycleOwner(), new Observer<String>() {
             @Override
-            public void onChanged(Boolean aBoolean) {
-                if (aBoolean){
-                    resultTextView.setText(R.string.div_error);
+            public void onChanged(String string) {
+                if (string != null && ! string.isEmpty()){
+                    resultTextView.setText(string);
+                    //not able to send a line shift in the livedata, Q is substitute, handled on concatenation
+                    mViewModel.setHistoryInput("Q");
                 } else {
                     resultTextView.setText("");
                 }
-
             }
         });
-        //empty observer needed for mediators to start observing
+
+
+        //empty observer needed for mediators to start observing in the viewmodel
         mViewModel.getLiveSubOperation().observe(getViewLifecycleOwner(), new Observer<SubOperation>() {
             @Override
             public void onChanged(SubOperation subOperation) {
@@ -126,7 +122,7 @@ public class MainFragment extends Fragment implements MaterialButton.OnCheckedCh
             }
         });
 
-        //empty observer needed for mediators to start observing
+        //empty observer needed for mediators to start observing in the viewmodel
         mViewModel.getLiveNumberString().observe(getViewLifecycleOwner(), new Observer<String>() {
             @Override
             public void onChanged(String s) {
@@ -137,6 +133,7 @@ public class MainFragment extends Fragment implements MaterialButton.OnCheckedCh
 
     private void buildGui() {
         historyTextView = rootView.findViewById(R.id.input_history_tv);
+        historyTextView.setMovementMethod(new ScrollingMovementMethod());
         historyTextView.setText(historyString);
         resultTextView = rootView.findViewById(R.id.result_tv);
         resultTextView.setText(resultString);
@@ -186,7 +183,6 @@ public class MainFragment extends Fragment implements MaterialButton.OnCheckedCh
         //Materialbutton, check/uncheck state not used, toggle check status after event
         if (isChecked){
             String buttonTxt = String.valueOf(button.getText());
-            Log.d("TAG", "Button clicked: " + buttonTxt);
             if (mViewModel != null && !buttonTxt.isEmpty()){
                 //two copies needed for different mediators
                 if (mViewModel.getHistoryInput() != null){
@@ -204,13 +200,7 @@ public class MainFragment extends Fragment implements MaterialButton.OnCheckedCh
     public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
         //supportMapFragment.onSaveInstanceState(outState);
-        Log.d("TAG", "mapfrag onsaveinstancestate, history: " + historyString );
         outState.putString(HISTORY_STRING, historyString);
         outState.putString(RESULT_STRING, resultString);
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
     }
 }

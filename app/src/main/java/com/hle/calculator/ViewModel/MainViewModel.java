@@ -1,7 +1,5 @@
 package com.hle.calculator.ViewModel;
 
-import android.util.Log;
-
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MediatorLiveData;
 import androidx.lifecycle.MutableLiveData;
@@ -21,17 +19,14 @@ public class MainViewModel extends ViewModel {
     private MutableLiveData<String> historyInput = new MutableLiveData<>();
     private MediatorLiveData<String> liveHistoryString = new MediatorLiveData<>();
 
-
     private MutableLiveData<String> buttonInput = new MutableLiveData<>();
     private MediatorLiveData<String> liveNumberString = new MediatorLiveData<>();
-    private MutableLiveData<Boolean> zeroError = new MutableLiveData<>();
 
     private MutableLiveData<SubOperation> liveSubOperation = new MutableLiveData<>();
     private MediatorLiveData<ArrayList<SubOperation>> liveSubOperationList = new MediatorLiveData<>();
 
-    private MediatorLiveData<String> liveResult = new MediatorLiveData<>();
+    private MutableLiveData<String> liveError = new MutableLiveData<>();
 
-    private final String TAG = "TAG";
 
     //empty constructor required
     public MainViewModel(){}
@@ -51,7 +46,6 @@ public class MainViewModel extends ViewModel {
         if (inputString == null){
             historyInput.setValue(null);
         }
-        Log.d(TAG, "VM sethistoryinput" + inputString);
         historyInput.setValue(inputString);
     }
 
@@ -70,7 +64,6 @@ public class MainViewModel extends ViewModel {
     }
 
     public void setLiveSubOperation(SubOperation subOperation) {
-        Log.d(TAG, "VM setlivesuboperation");
         if (subOperation == null){
             liveSubOperation.setValue(null);
         } else {
@@ -79,7 +72,6 @@ public class MainViewModel extends ViewModel {
     }
 
     public MutableLiveData<SubOperation> getLiveSubOperation() {
-        Log.d(TAG, "VM getlivesuboperation");
         if (liveSubOperation == null) {
             liveSubOperation = new MediatorLiveData<>();
         }
@@ -100,7 +92,6 @@ public class MainViewModel extends ViewModel {
         liveHistoryString.addSource(historyInput, new Observer<String>() {
             @Override
             public void onChanged(String input) {
-                Log.d(TAG, "historyInput onchanged, new = " + input);
                 if (input != null) {
                     String string = "";
                     if (liveHistoryString.getValue() != null) {
@@ -143,7 +134,6 @@ public class MainViewModel extends ViewModel {
 
     //list will be used for calculating result
     public void setLiveSubOperationList(ArrayList<SubOperation> operationList) {
-        Log.d(TAG, "VM setlivesuboperationslist");
         if (operationList == null){
             operationList = new ArrayList<>();
         }
@@ -151,7 +141,6 @@ public class MainViewModel extends ViewModel {
     }
 
     public MutableLiveData<ArrayList<SubOperation>> getLiveSubOperationList() {
-        Log.d(TAG, "VM getlivesuboperationslist");
         if (liveSubOperationList == null || (liveSubOperationList.getValue() == null || liveSubOperationList.getValue().isEmpty())){
             liveSubOperationList = new MediatorLiveData<>();
         }
@@ -170,7 +159,7 @@ public class MainViewModel extends ViewModel {
                     if (!subOperation.getNumberString().isEmpty() && resultService.isNumber(subOperation.getNumberString())){
                         double number = Double.parseDouble(subOperation.getNumberString());
                         if (list.size() > 0 && list.get(list.size() - 1).getOperator().equals("/") && number == 0) {
-                            setZeroError(true);
+                            setLiveError("DIV 0");
                         } else {
                             list.add(subOperation);
                         }
@@ -182,47 +171,23 @@ public class MainViewModel extends ViewModel {
         return liveSubOperationList;
     }
 
-    public void setLiveResult(String result) {
-        if (result == null){
-            result = "0.0";
+    public LiveData<String> getLiveError() {
+        if (liveError == null ){
+            liveError = new MutableLiveData<>();
         }
-        liveResult.setValue(result);
+        return liveError;
     }
 
-    public MutableLiveData<String> getLiveResult() {
-        Log.d(TAG, "VM getliveresult");
-        if (liveResult == null ){
-            liveResult = new MediatorLiveData<>();
-        }
-        liveResult.addSource(liveSubOperationList, new Observer<ArrayList<SubOperation>>() {
-            @Override
-            public void onChanged(ArrayList<SubOperation> subOperations) {
-                if (subOperations != null && !subOperations.isEmpty()){
-                    String string = calculateResult(subOperations);
-                    setLiveResult(string);
-                }
-            }
-        });
-        return liveResult;
-    }
-
-    public LiveData<Boolean> getZeroError() {
-        if (zeroError == null ){
-            zeroError = new MutableLiveData<>();
-        }
-        return zeroError;
-    }
-
-    public void setZeroError(Boolean error) {
+    public void setLiveError(String error) {
         if (error == null){
-            error = false;
+            error = "";
         }
-        zeroError.setValue(error);
+        liveError.setValue(error);
     }
 
     public String calculateResult(ArrayList<SubOperation> operations) {
         if (operations != null && ! operations.isEmpty()){
-            //passing in operatirs except =
+            //passing in operators except =
             return resultService.calculateResult(operators.substring(1), operations).get(0).getNumberString();
         }
         else {
@@ -241,25 +206,22 @@ public class MainViewModel extends ViewModel {
             tempString += buttonString;
             return tempString;
         } else if (buttonString.equals(".")){
-            // check for multiple commas needed
             if (tempString.contains(".")){
-                //TODO set error
+                setLiveError(". ERR");
             } else {
                 tempString += buttonString;
             }
             return tempString;
         } else if (operators.contains(buttonString) || buttonString.equals("=")){
             handleOperator(buttonString);
-            //return null;
         } else if (buttonString.equals("AC")){
             resetAll();
-            //return null;
-            //handling space char from back button
+            //handling space char sent from back button
         } else if (buttonString.equals(" ")){
             if (tempString != null && !tempString.isEmpty()){
                 return tempString.substring(0, tempString.length()-1);
             }
-            setZeroError(false);
+            setLiveError("");
         }
         return  null;
     }
@@ -276,24 +238,16 @@ public class MainViewModel extends ViewModel {
 
         //triggering a result calculation
         SubOperation subOperation = new SubOperation(numberString,  buttonString);
-        Log.d(TAG, "handleoperator settingsubop: " + subOperation.toString());
         setLiveSubOperation(subOperation);
         liveNumberString.setValue(null);
     }
 
     public void resetAll() {
-        setZeroError(false);
+        setLiveError("");
         setLiveHistoryString("");
         setLiveSubOperation(null);
         setLiveSubOperationList(null);
         setHistoryInput("");
         setLiveNumberString("");
-        setLiveResult("0.0");
-    }
-
-    @Override
-    protected void onCleared() {
-        super.onCleared();
-        Log.d(TAG, "VIEWMODEL CLEARED!");
     }
 }

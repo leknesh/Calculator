@@ -15,13 +15,14 @@
         android:layout_width="match_parent"
         android:layout_marginTop="36dp"
         android:textAlignment="viewEnd"
+        android:scrollbars="vertical"
         android:textColor="@color/primaryTextColor"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toEndOf="@id/reset_btn"
         app:layout_constraintBottom_toTopOf="@id/reset_btn"
         android:background="@color/textBackgroundColor"
         android:textAppearance="@style/TextAppearance.AppCompat.Display1"
-        android:lines="4"
+        android:minLines="4"
         android:inputType="none"/>
 
     <com.google.android.material.button.MaterialButton
