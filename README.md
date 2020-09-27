@@ -30,11 +30,10 @@ The first operator in the string is used as current operator, and an iteration o
 #### Error handling
 Input errors like zero division are handled by setting an error message in the result textview. Several consecutive operator inputs
 are handled as if there was a 0 inbetween, so 1 +* 2 is treated as 1 + 0 * 2. It would be more logical to have the latter operator replace the former.
-Multiple commas in the same number is ignored, so 2.5.5 = 2.55. This could also be handled better.
 
 #### Potential Improvements
 - The viewmodel might have more responsibilities than what would be ideal, since it is responsible for all input handling. Maybe this should have been moved, however, the
-Android docs on viewmodels do suggest that viewmodels do more than just holding the data. Also, there are a lot of livedata variables in the viewmodel, but 
+Android docs on viewmodels do suggest that viewmodels can be used to do more than just holding the data. Also, there are a lot of livedata variables in the viewmodel, but 
 it was not possible to find a way to minimize this.
 
 - The layout needs some improvements to work on more phone models. The test model has a large screen and a layout variation for smaller displays should have smaller button text  to fit layout to screen as intended.
