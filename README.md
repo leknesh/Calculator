@@ -24,10 +24,8 @@ The input/history textview data is sent to viewmodel on each button press, where
 The limitation in the mediator usage creates difficulties upon orientation change, it has not been possible to figure out how to retain state on rotation change without
 introducing other issues (crashes and/or loss of observer). The current solution recreates the fragment and viewmodel on rotation.   
 
-Calculating the result is preformed by method calculateResult in the ResultService class. Method input is a string with operators ("*/-+") and a list of Suboperations. 
-The first operator in the string is used as current operator, and an iteration of the list will perform all matching calculations and update the list. Then one operator is removed
-and the method repeats through recursion until all operators are used. This way, the result from e.g 1 + 2 * 2 + 1 is calculated as 1 + 4 + 1 = 6, instead of = 3 * 2 + 1 = 7
-This function took a bit of trial and error to get right. 
+Calculating the result is preformed by method calculateResult in ResultService class. Method input is a string with operators ("*/-+") and a list of Suboperations. 
+The first operator in the string is used as current operator, and an iteration of the list will perform all matching calculations and update the list. Then one operator is removed and the method repeats through recursion until all operators are used. This way, the result from e.g 1 + 2 * 2 + 1 is calculated as 1 + 4 + 1 = 6, instead of 3 * 2 + 1 = 7. This function took a bit of trial and error to get right. 
 
 #### Error handling
 Input errors like zero division are handled by setting an error message in the result textview. Several consecutive operator inputs
@@ -35,11 +33,13 @@ are handled as if there was a 0 inbetween, so 1 +* 2 is treated as 1 + 0 * 2. It
 Multiple commas in the same number is ignored, so 2.5.5 = 2.55. This could also be handled better.
 
 #### Potential Improvements
-The viewmodel might have more responsibilities than what would be ideal, since it is responsible for all input handling. Maybe this should have been moved, however, the
+- The viewmodel might have more responsibilities than what would be ideal, since it is responsible for all input handling. Maybe this should have been moved, however, the
 Android docs on viewmodels do suggest that viewmodels do more than just holding the data. Also, there are a lot of livedata variables in the viewmodel, but 
 it was not possible to find a way to minimize this.
 
-Unit testing was not implemented as I have no previous experience in that area. It would also be preferable to 
+- The layout needs some improvements to work on more phone models. The test model has a large screen and a layout variation for smaller displays should have smaller button text  to fit layout to screen as intended.
+
+- Unit testing was not implemented as I have no previous experience in that area. It would also be preferable to 
 write the app in Kotlin, but there was not enough time to learn a new language.
 
 #### Resources
