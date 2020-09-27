@@ -30,9 +30,6 @@ dependencies {
 
     //gui
     implementation 'com.google.android.material:material:1.2.1'
-    //implementation 'androidx.savedstate:savedstate:1.1.0-alpha01'
-    implementation 'androidx.lifecycle:lifecycle-viewmodel-savedstate:2.3.0-alpha07'
-
 
     //test
     testImplementation 'junit:junit:4.13'
