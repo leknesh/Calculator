@@ -199,7 +199,6 @@ public class MainFragment extends Fragment implements MaterialButton.OnCheckedCh
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
-        //supportMapFragment.onSaveInstanceState(outState);
         outState.putString(HISTORY_STRING, historyString);
         outState.putString(RESULT_STRING, resultString);
     }
