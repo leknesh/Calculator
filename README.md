@@ -1,6 +1,6 @@
 # Calculator
 
-![calculator_icon](app/src/main/res/mipmap-xxxhdpi/ic_launcher_round.png) ![calculator_screenshot](app/src/main/res/drawable/screenshot.jpg)
+![calculator_icon](app/src/main/res/mipmap-xxxhdpi/ic_launcher_round.png) 
 
 ### Basic calculator
 
@@ -49,4 +49,6 @@ No third party libraries were used for the project. The app icon was made in Ado
   - [**Model-package**](app/src/main/java/com/hle/calculator/Model) contains SubOperation class and a ResultService class that handles calculation and number check.
   - [**View-package**](app/src/main/java/com/hle/calculator/View) contains mainactivity and fragment. 
   - [**ViewModel-package**](app/src/main/java/com/hle/calculator/ViewModel) contains viewmodel only.
+  
+  ![calculator_screenshot](app/src/main/res/drawable/screenshot.jpg)
   
