@@ -7,7 +7,7 @@
 This app is a basic calculator app with the main math operations. The app can handle multiple consecutive operations while adhering to the 
 mathematical rules of operator priority: * / - +. The calculator has a back-button to make corrections and a resetbutton to clear all input and displays. <br /><br />
 
-![calculator_screenshot](app/src/main/res/drawable/screenshot.jpg)
+![calculator_screenshot](app/src/main/res/drawable/screenshot.png)
 
 #### Project Structure
 The app is built with a MVVM architecture (Model-View-ViewModel) using lifecycle elements from Android Jetpack. The app is written in Java. 
@@ -37,7 +37,7 @@ are handled as if there was a 0 inbetween, so 1 +* 2 is treated as 1 + 0 * 2. It
 Android docs on viewmodels do suggest that viewmodels can be used to do more than just holding the data. Also, there are a lot of livedata variables in the viewmodel, but 
 it was not possible to find a way to minimize this.
 
-- The layout needs some improvements to work on more phone models. The test model has a large screen and a layout variation for smaller displays should have smaller button text  to fit layout to screen as intended.
+- The layout needs some improvements to work on more phone models. The test model has a large screen and a layout variation for smaller displays should have smaller button text to fit layout to screen as intended.
 
 - Unit testing was not implemented as I have no previous experience in that area. It would also be preferable to 
 write the app in Kotlin, but there was not enough time to learn a new language.
