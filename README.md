@@ -7,7 +7,7 @@
 This app is a basic calculator app with the main math operations. The app can handle multiple consecutive operations while adhering to the 
 mathematical rules of operator priority: * / - +. The calculator has a back-button to make corrections and a resetbutton to clear all input and displays. <br /><br />
 
-
+![calculator_screenshot](app/src/main/res/drawable/screenshot.png)
 
 #### Project Structure
 The app is built with a MVVM architecture (Model-View-ViewModel) using lifecycle elements from Android Jetpack. The app is written in Java. 
